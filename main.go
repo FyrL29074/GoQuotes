@@ -1,14 +1,14 @@
 package main
 
 import (
+	"goquotes/internal"
 	"net/http"
 )
 
 func main() {
-	InitStorage()
+	internal.InitStorage()
 
-	r := SetupRouter()
-
+	r := internal.SetupRouter()
 	err := http.ListenAndServe(":8080", r)
 	if err != nil {
 		panic(err)

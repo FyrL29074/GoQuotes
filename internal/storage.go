@@ -1,4 +1,4 @@
-package main
+package internal
 
 var quotes map[int]Quote
 var nextID int

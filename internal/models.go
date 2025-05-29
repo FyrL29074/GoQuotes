@@ -1,4 +1,4 @@
-package main
+package internal
 
 type Quote struct {
 	ID     int    `json:"id"`
