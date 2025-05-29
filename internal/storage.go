@@ -10,8 +10,13 @@ func InitStorage() {
 	nextID = 0
 }
 
-func addQuote(id int, q Quote) {
+func addQuote(q Quote) {
 	quotes[nextID] = q
+	nextID++
+}
+
+func getCurrentId() int {
+	return nextID
 }
 
 func getAllQuotes() []Quote {

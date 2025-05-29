@@ -17,10 +17,9 @@ func postQuotes(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
-	q.ID = nextID
+	q.ID = getCurrentId()
 
-	addQuote(nextID, q)
-	nextID++
+	addQuote(q)
 
 	resp := Response{
 		Message: "Quote was successfully saved!",
