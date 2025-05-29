@@ -2,7 +2,6 @@ package internal
 
 import (
 	"encoding/json"
-	"math/rand"
 	"net/http"
 	"strconv"
 
@@ -20,7 +19,7 @@ func postQuotes(w http.ResponseWriter, r *http.Request) {
 	}
 	q.ID = nextID
 
-	quotes[nextID] = q
+	addQuote(nextID, q)
 	nextID++
 
 	resp := Response{
@@ -35,21 +34,13 @@ func getQuotes(w http.ResponseWriter, r *http.Request) {
 	author := r.URL.Query().Get("author")
 
 	if author == "" {
-		allQuotes := make([]Quote, 0)
-		for _, q := range quotes {
-			allQuotes = append(allQuotes, q)
-		}
+		allQuotes := getAllQuotes()
 
 		json.NewEncoder(w).Encode(allQuotes)
 		return
 	}
 
-	authorQuotes := make([]Quote, 0)
-	for _, q := range quotes {
-		if q.Author == author {
-			authorQuotes = append(authorQuotes, q)
-		}
-	}
+	authorQuotes := getQuotesByAuthor(author)
 
 	json.NewEncoder(w).Encode(authorQuotes)
 }
@@ -57,20 +48,18 @@ func getQuotes(w http.ResponseWriter, r *http.Request) {
 func getRandomQuote(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	if len(quotes) == 0 {
+	if getQuotesLength() == 0 {
 		http.Error(w, "No quotes available", http.StatusNotFound)
 		return
 	}
 
-	ids := make([]int, 0, len(quotes))
-	for id := range quotes {
+	ids := make([]int, 0, getQuotesLength())
+	for id := range getAllQuotes() {
 		ids = append(ids, id)
 	}
 
-	randomIndex := rand.Intn(len(ids))
-	randomID := ids[randomIndex]
+	q := getRandomQuoteFromDb(ids)
 
-	q := quotes[randomID]
 	json.NewEncoder(w).Encode(q)
 }
 
@@ -85,10 +74,8 @@ func deleteQuoteByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, ok := quotes[id]
-
-	if ok {
-		delete(quotes, id)
+	if checkIfQuoteInMap(id) {
+		deleteQuote(id)
 		resp := Response{
 			Message: "Quote was successfully deleted!",
 		}
