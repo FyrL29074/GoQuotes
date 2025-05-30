@@ -8,12 +8,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func postQuotes(w http.ResponseWriter, r *http.Request) {
+func postQuote(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var q Quote
 	err := json.NewDecoder(r.Body).Decode(&q)
-	if err != nil {
+	if err != nil || q.Author == "" || q.Quote == "" {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}

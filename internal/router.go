@@ -9,7 +9,7 @@ import (
 func SetupRouter() *mux.Router {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/quotes", postQuotes).Methods(http.MethodPost)
+	r.HandleFunc("/quotes", postQuote).Methods(http.MethodPost)
 	r.HandleFunc("/quotes", getQuotes).Methods(http.MethodGet)
 	r.HandleFunc("/quotes/random", getRandomQuote).Methods(http.MethodGet)
 	r.HandleFunc("/quotes/{id}", deleteQuoteByID).Methods(http.MethodDelete)
