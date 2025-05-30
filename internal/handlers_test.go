@@ -163,7 +163,7 @@ func TestGetRandomQuote(t *testing.T) {
 	})
 
 	t.Run("with multiple quotes", func(t *testing.T) {
-		rand.New(rand.NewSource(42))
+		rand.Seed(42)
 
 		r := setupTestServer()
 
@@ -194,8 +194,8 @@ func TestGetRandomQuote(t *testing.T) {
 			t.Fatalf("failed to decode JSON: %v", err)
 		}
 
-		if quote.Quote != "Second quote" {
-			t.Errorf("expected 'Second quote', got '%s'", quote.Quote)
+		if quote.Quote != "Third quote" {
+			t.Errorf("expected 'Third quote', got '%s'", quote.Quote)
 		}
 	})
 }
